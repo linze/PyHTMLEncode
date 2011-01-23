@@ -39,7 +39,7 @@ else:
     # Lower case tilde
     fdata = re.sub("á", "&aacute;", fdata)
     fdata = re.sub("é", "&eacute;", fdata)
-    fdata = re.sub("í", "&íacute;", fdata)
+    fdata = re.sub("í", "&iacute;", fdata)
     fdata = re.sub("ó", "&oacute;", fdata)
     fdata = re.sub("ú", "&uacute;", fdata)
     # Upper case tilde
@@ -47,7 +47,7 @@ else:
     fdata = re.sub("É", "&Eacute;", fdata)
     fdata = re.sub("Í", "&Iacute;", fdata)
     fdata = re.sub("Ó", "&Oacute;", fdata)
-    fdata = re.sub("Ú", "&Úacute;", fdata)
+    fdata = re.sub("Ú", "&Uacute;", fdata)
     # Lower case umlaut
     fdata = re.sub("ä", "&auml;", fdata)
     fdata = re.sub("ë", "&euml;", fdata)
