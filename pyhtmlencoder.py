@@ -1,7 +1,8 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
     Copyright 2011 Francisco Canela González
+		   Adrián Pérez Heredia
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
@@ -23,52 +24,95 @@ import sys
 import os.path
 import re
 
-# Application needs one parameter.
-if (len(sys.argv) != 3):
-    print "Usage: ./pyhtmlencode.py <input> <output>"
-else:
-    print "[+] Encoding the document..."
-    # Open the files and read the input
-    if (os.path.isfile(sys.argv[1]) == False):
-        print "[!] Input file does not exist!"
+def check_inputfile():
+    
+    if(os.path.isfile(sys.argv[1]) == False):
+        print("[!] Input file does not exist!")
         sys.exit(-1)
+
+def create_dict():
+    
+    d = dict()
+    
+    #Lower case Acute accent
+    d["á"] = "&aacute;"
+    d["é"] = "&eacute;"
+    d["í"] = "&iacute;"
+    d["ó"] = "&oacute;"
+    d["ú"] = "&uacute;"
+
+    #Upper case Acute accent
+    d["Á"] = "&Aacute;"
+    d["É"] = "&Eacute;"
+    d["Í"] = "&Iacute;"
+    d["Ó"] = "&Oacute;"
+    d["Ú"] = "&Uacute;"
+
+    #Lower case umlaut
+    d["ä"] = "&auml;"
+    d["ë"] = "&euml;"
+    d["ï"] = "&iuml;"
+    d["ö"] = "&ouml;"
+    d["ü"] = "&uuml;"
+
+    #Upper case umlaut
+    d["Ä"] = "&Auml;"
+    d["Ë"] = "&Euml;"
+    d["Ï"] = "&Iuml;"
+    d["Ö"] = "&Ouml;"
+    d["Ü"] = "&Uuml;"
+
+    # "ñ" character
+    d["ñ"] = "&ntilde;"
+    d["Ñ"] = "&Ntilde;"
+
+    # Spanish exclamation and interrogation
+    d["¡"] = "&iexcl;"
+    d["¿"] = "&iquest;"
+
+    return d
+
+def do_encoding(dic, output_file):
+    
     finput = open(sys.argv[1], "r")
     fdata = finput.read()
     finput.close()
+    
+    it = dic.iterkeys()
+    
+    print("[+] Encoding document...")
 
-    # Lower case tilde
-    fdata = re.sub("á", "&aacute;", fdata)
-    fdata = re.sub("é", "&eacute;", fdata)
-    fdata = re.sub("í", "&iacute;", fdata)
-    fdata = re.sub("ó", "&oacute;", fdata)
-    fdata = re.sub("ú", "&uacute;", fdata)
-    # Upper case tilde
-    fdata = re.sub("Á", "&Aacute;", fdata)
-    fdata = re.sub("É", "&Eacute;", fdata)
-    fdata = re.sub("Í", "&Iacute;", fdata)
-    fdata = re.sub("Ó", "&Oacute;", fdata)
-    fdata = re.sub("Ú", "&Uacute;", fdata)
-    # Lower case umlaut
-    fdata = re.sub("ä", "&auml;", fdata)
-    fdata = re.sub("ë", "&euml;", fdata)
-    fdata = re.sub("ï", "&iuml;", fdata)
-    fdata = re.sub("ö", "&ouml;", fdata)
-    fdata = re.sub("ü", "&uuml;", fdata)
-    # Upper case umlaut
-    fdata = re.sub("Ä", "&Auml;", fdata)
-    fdata = re.sub("Ë", "&Euml;", fdata)
-    fdata = re.sub("Ï", "&Iuml;", fdata)
-    fdata = re.sub("Ö", "&Ouml;", fdata)
-    fdata = re.sub("Ü", "&Uuml;", fdata)
-    # Spanish "ñ"
-    fdata = re.sub("ñ", "&ntilde;", fdata)
-    fdata = re.sub("Ñ", "&Ntilde;", fdata)
-    # Spanish exclamation and interrogation
-    fdata = re.sub("¡", "&iexcl;", fdata)
-    fdata = re.sub("¿", "&iquest;", fdata)
+    for key in it:
+        fdata = re.sub(key,dic.get(key), fdata)
 
-    # Save the changes
-    foutput = open(sys.argv[2], "w")
+    foutput = open(output_file, "w")
     foutput.write(fdata)
     foutput.close()
-    print "[+] Document encoded!"
+
+    print("[+] Document encoded !")
+
+
+def encode(output_file):
+    
+    check_inputfile()
+    dic = create_dict()
+    do_encoding(dic, output_file)
+
+#Entry point
+if(len(sys.argv) > 3 or len(sys.argv) < 2):
+    
+    print("Usage: htmlenc <input> [<output>]")
+
+else:
+    
+    #If only input file is specified, it will be used as output too.
+
+    if(len(sys.argv) != 3):
+        output_file = sys.argv[1]
+    else:
+        output_file = sys.argv[2]
+
+    encode(output_file)
+    sys.exit(0)
+
+
